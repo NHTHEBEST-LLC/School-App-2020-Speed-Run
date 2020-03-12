@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace School_App_2020
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
+            throw new NotImplementedException();
         }
     }
 }
