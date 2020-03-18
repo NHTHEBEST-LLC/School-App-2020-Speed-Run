@@ -29,23 +29,29 @@ namespace School_App_2020
             PaintPlayer();
             PaintTerrain();
         }
-        static int[] GenTerrain()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start">start hight 1-9</param>
+        /// <param name="tend">to up or down 5 normal</param>
+        /// <returns></returns>
+        static int[] GenTerrain(int start = 5, int tend = 5)
         {
             Random r = new Random();
             int width = Console.WindowWidth-2;
             
             List<int> terrain = new List<int>();
-            terrain.Add(3);
+            terrain.Add(start);
             for (int i = 0; i<width;i+=2)
             {
                 int last = terrain[i];
-                int min = last - 1;
-                int max = last + 1;
+                int min = last*10 - 10 +tend;
+                int max = last*10 + 10  +tend;
                 if (min < 0)
                     min = 0;
-                if (max >= 10)
-                    max = 10;
-                int next = ((r.Next(min, max) + r.Next(min, max)));
+                if (max >= 100)
+                    max = 100;
+                int next = r.Next(min, max + 1)/10;
 
                 terrain.Add(next); terrain.Add(next);
             }
@@ -54,8 +60,8 @@ namespace School_App_2020
         static void PaintTerrain()
         {
             int x = 0;
-            int[] Terrain = GenTerrain();
-                foreach (int y in Terrain)
+            int[] Terrain = GenTerrain(5, 2);
+            foreach (int y in Terrain)
             {
                 printAtUnder("_", new Cords(x,y),  ConsoleColor.Green);
                 x++;
