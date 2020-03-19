@@ -60,7 +60,7 @@ namespace School_App_2020
         static void PaintTerrain()
         {
             int x = 0;
-            int[] Terrain = GenTerrain(5, 2);
+            int[] Terrain = GenTerrain(7, 3);
             foreach (int y in Terrain)
             {
                 printAtUnder("_", new Cords(x,y),  ConsoleColor.Green);
