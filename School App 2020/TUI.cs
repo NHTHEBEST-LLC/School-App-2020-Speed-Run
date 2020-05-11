@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LowConsole;
 
 namespace School_App_2020
 {
@@ -18,16 +19,36 @@ namespace School_App_2020
     }
     static class TUI
     {
+        private static Cords _Player = new Cords(0, 0);
+        private static int[] Terrain = GenTerrain(7, 3);
+        public static Cords Player 
+        { 
+            private set 
+            { 
+                _Player = value; 
+            } 
+            get 
+            {
+                int x = _Player.X;
+                int y = Terrain[x] + 1;
+                return new Cords(x,y);
+            } 
+        }
         
-        public static Cords Player { private set; get; }
-        static public void Paint()
+        static public async Task Paint()
         {
-            Console.CursorVisible = false;
-            Player = new Cords(0, 3);
-            SetColor(ConsoleColor.Cyan, ConsoleColor.Cyan);
-            Console.Clear();
-            PaintPlayer();
-            PaintTerrain();
+            while (true)
+            {
+                Console.CursorVisible = false;
+
+                //SetColor(ConsoleColor.Cyan, ConsoleColor.Cyan);
+                //Console.Clear();
+                LC.Clear(0x33);
+                PaintTerrain();
+                PaintPlayer();
+                
+                await Task.Delay(200);
+            }
         }
         /// <summary>
         /// 
@@ -38,7 +59,7 @@ namespace School_App_2020
         static int[] GenTerrain(int start = 5, int tend = 5)
         {
             Random r = new Random();
-            int width = Console.WindowWidth-2;
+            int width = Console.WindowWidth-1;
             
             List<int> terrain = new List<int>();
             terrain.Add(start);
@@ -60,19 +81,55 @@ namespace School_App_2020
         static void PaintTerrain()
         {
             int x = 0;
-            int[] Terrain = GenTerrain(7, 3);
-            foreach (int y in Terrain)
+            
+            foreach (int my in Terrain)
             {
-                printAtUnder("_", new Cords(x,y),  ConsoleColor.Green);
+                for (int y = 1; y <= my; y++)
+                {
+                    int curser = x+( LC.Height - y)*LC.Width;
+                    LC.Buffer[curser].Char.AsciiChar = 219;
+                    LC.Buffer[curser].Attributes = 0x2;
+                }
+                    //printAtUnder(219, new Cords(x,y),  ConsoleColor.Green);
                 x++;
             }
         }
 
-        
+        public static void PlayerMove(int info)
+        {
+            PrintAT(" ", Player, ConsoleColor.Cyan, ConsoleColor.Cyan);
+            int x = Player.X;
+            int _new = x + info;
+            if (_new >=0 && _new < Console.WindowWidth - 2)
+            {
+                _Player.X = _new;
+            }
+            PaintPlayer();
+        }
+
+        public static void PlayerJump(int info)
+        {
+            SetCords(Player);
+            LC.WriteChar((char)240, 0x3b);
+            int x = Player.X;
+            int _new = x + info;
+            if (_new >= 0 && _new < Console.WindowWidth - 1)
+            {
+                _Player.X = _new;
+            }
+            PaintPlayer();
+        }
+
+        public static void Log(object text)
+        {
+            PrintAT(text, new Cords(0, 0), ConsoleColor.Cyan, ConsoleColor.Black);
+        }
 
         static void PaintPlayer()
         {
-            PrintAT(Convert.ToChar(946), Player, Console.BackgroundColor, ConsoleColor.Blue);
+            //PrintAT(2, Player, ConsoleColor.Cyan, ConsoleColor.Red);
+            SetCords(Player);
+            LC.WriteChar((char)2, 0x31);
         }
 
         static void printAtUnder(object text, Cords cords, ConsoleColor color)
@@ -86,9 +143,13 @@ namespace School_App_2020
        static void PrintAT(object text, Cords cords, ConsoleColor background, ConsoleColor forground)
         {
             
-            SetColor(background, forground);
+            //SetColor(background, forground);
             SetCords(cords);
-            Console.Write(text);
+            //Console.Write(text);
+            int col = (int)background << 4;
+            col += (int)forground;
+
+            LC.Write(text.ToString(), (char)col);
         }
         static void SetColor(ConsoleColor background, ConsoleColor forground)
         {
@@ -98,7 +159,11 @@ namespace School_App_2020
         }
         static void SetCords(Cords cords)
         {
-            Console.SetCursorPosition(cords.X, Console.WindowHeight - cords.Y);
+            //Console.SetCursorPosition(cords.X, Console.WindowHeight - cords.Y);
+            LC.setCuser(cords.X, LC.Height - cords.Y);
         }
+
+
+
     }
 }
