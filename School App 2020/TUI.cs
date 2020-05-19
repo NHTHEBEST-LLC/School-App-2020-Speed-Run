@@ -46,8 +46,11 @@ namespace School_App_2020
                 LC.Clear(0x33);
                 PaintTerrain();
                 PaintPlayer();
-                
-                await Task.Delay(200);
+
+                SetCords(new Cords(4, Terrain[4]+2));
+                //LC.WriteChar((char)30, (short)0x2);
+
+                //await Task.Delay(100);
             }
         }
         /// <summary>
@@ -97,66 +100,46 @@ namespace School_App_2020
 
         public static void PlayerMove(int info)
         {
-            PrintAT(" ", Player, ConsoleColor.Cyan, ConsoleColor.Cyan);
-            int x = Player.X;
-            int _new = x + info;
-            if (_new >=0 && _new < Console.WindowWidth - 2)
-            {
-                _Player.X = _new;
-            }
-            PaintPlayer();
-        }
-
-        public static void PlayerJump(int info)
-        {
             SetCords(Player);
-            LC.WriteChar((char)240, 0x3b);
+            LC.WriteChar(' ', 0x33);
             int x = Player.X;
             int _new = x + info;
-            if (_new >= 0 && _new < Console.WindowWidth - 1)
+            if (_new >=0 && _new < Console.WindowWidth)
             {
                 _Player.X = _new;
             }
             PaintPlayer();
         }
 
-        public static void Log(object text)
-        {
-            PrintAT(text, new Cords(0, 0), ConsoleColor.Cyan, ConsoleColor.Black);
-        }
 
+        // us char 30 ▲ for trash
+        
         static void PaintPlayer()
         {
             //PrintAT(2, Player, ConsoleColor.Cyan, ConsoleColor.Red);
             SetCords(Player);
-            LC.WriteChar((char)2, 0x31);
+
+            if (DateTime.Now.Second%2==0)
+                LC.WriteChar((char)2, 0x34);
+            else
+                LC.WriteChar((char)1, 0x34);
+            
+
         }
 
-        static void printAtUnder(object text, Cords cords, ConsoleColor color)
-        {
-            int y = cords.Y;
+ 
 
-            for (int i = 0; i <= y; i++)
-                PrintAT(text, new Cords(cords.X, i), color, color);
-        }
-
-       static void PrintAT(object text, Cords cords, ConsoleColor background, ConsoleColor forground)
+       static void PrintAT(string text, Cords cords, int color)
         {
             
             //SetColor(background, forground);
             SetCords(cords);
             //Console.Write(text);
-            int col = (int)background << 4;
-            col += (int)forground;
 
-            LC.Write(text.ToString(), (char)col);
-        }
-        static void SetColor(ConsoleColor background, ConsoleColor forground)
-        {
 
-            Console.BackgroundColor = background;
-            Console.ForegroundColor = forground;
+            LC.Write(text, (char)color);
         }
+
         static void SetCords(Cords cords)
         {
             //Console.SetCursorPosition(cords.X, Console.WindowHeight - cords.Y);

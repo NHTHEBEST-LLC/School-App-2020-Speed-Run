@@ -24,12 +24,12 @@ namespace School_App_2020
             {
                 ConsoleKeyInfo keyInfo = Console.ReadKey();
                 ConsoleKey x = keyInfo.Key;
-                TUI.Log(keyInfo.Modifiers);
                 if (x == ConsoleKey.RightArrow)
                     TUI.PlayerMove(1);
                 //else if (x == ConsoleKey.Spacebar)
                 else if (x == ConsoleKey.LeftArrow)
                     TUI.PlayerMove(-1);
+
             }
 
 
