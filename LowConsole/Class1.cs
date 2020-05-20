@@ -25,17 +25,31 @@ namespace LowConsole
     }
     public class LC
     {
+        /// <summary>
+        /// Width of buffer
+        /// </summary>
         public readonly static short Width = 120;
+        /// <summary>
+        /// Height of buffer
+        /// </summary>
         public readonly static short Height = 30;
 
+        
         static bool first = true;
 
         static int curser = 0;
         static SafeFileHandle h = lowlevel.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
+        /// <summary>
+        /// Screen Buffer
+        /// </summary>
         public static CharInfo[] Buffer = new CharInfo[Width * Height];
         static lowlevel.SmallRect rect = new lowlevel.SmallRect() { Left = 0, Top = 0, Right = Width, Bottom = Height };
 
+        /// <summary>
+        /// clears the buffer
+        /// </summary>
+        /// <param name="color">color to clear to</param>
         public static void Clear(int color)
         {
             if (first)
@@ -51,13 +65,27 @@ namespace LowConsole
 
         }
 
+        /// <summary>
+        /// sets the Cuser for Write and Writechar
+        /// </summary>
+        /// <param name="x">X Value</param>
+        /// <param name="y">Y Vakue</param>
         public static void setCuser(int x, int y)
         {
             int c = (y * Width) + x;
             if (c < Width * Height)
                 curser = c;
+            if (curser>=Buffer.Length)
+            {
+                throw new IndexOutOfRangeException("X or Y Too Big");
+            }
         }
 
+        /// <summary>
+        /// Writes a string to the buffer 
+        /// </summary>
+        /// <param name="text">text to write</param>
+        /// <param name="color">color to write in</param>
         public static void Write(string text, char color)
         {
             foreach(char c in text)
@@ -66,6 +94,11 @@ namespace LowConsole
             }
         }
 
+        /// <summary>
+        /// Writes one char to the buffer 
+        /// </summary>
+        /// <param name="c">char to write</param>
+        /// <param name="color">color to write in</param>
         public static void WriteChar(char c, short color)
         {
             if (first)
@@ -74,11 +107,18 @@ namespace LowConsole
                 first = false;
             }
 
+            if (curser >= Buffer.Length)
+                curser = Buffer.Length - 1;
+
             Buffer[curser].Char.UnicodeChar = c;
             Buffer[curser].Attributes = color;
             curser++;
         }
 
+        /// <summary>
+        /// loop to update the disply to what the buffer contains
+        /// must be run in new thread
+        /// </summary>
         private static void WriteBufferLoop()
         {
             while (true)
@@ -88,9 +128,13 @@ namespace LowConsole
                 //var ms = (int)sw.ElapsedMilliseconds;
                 //if (ms < 16)
                 //    await Task.Delay(16 - ms);
+                
             }
         }
 
+        /// <summary>
+        /// updates the screen to what the buffer contains
+        /// </summary>
         private static void WriteBuffer()
         {
             if (!h.IsInvalid)

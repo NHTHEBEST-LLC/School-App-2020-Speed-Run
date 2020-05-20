@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using LowConsole;
 
@@ -21,6 +23,7 @@ namespace School_App_2020
     {
         private static Cords _Player = new Cords(0, 0);
         private static int[] Terrain = GenTerrain(7, 3);
+        private static bool[] Trash = GenTrash(1);
         public static Cords Player 
         { 
             private set 
@@ -34,35 +37,64 @@ namespace School_App_2020
                 return new Cords(x,y);
             } 
         }
-        
-        static public async Task Paint()
+        static int fps = 1000;
+        static public void Paint()
         {
-            while (true)
+            new Thread(() =>
             {
-                Console.CursorVisible = false;
+                while (true)
+                {
+                    int del = 1000 / fps;
+                    Console.CursorVisible = false;
+                    var sw = Stopwatch.StartNew();
+                    
+                    LC.Clear(0x33);
+                    PaintTerrain();
+                    PaintPlayer();
 
-                //SetColor(ConsoleColor.Cyan, ConsoleColor.Cyan);
-                //Console.Clear();
-                LC.Clear(0x33);
-                PaintTerrain();
-                PaintPlayer();
+                    
+                    var ms = (int)sw.ElapsedMilliseconds;
+                    if (ms < del)
+                        Thread.Sleep(del - ms);
 
-                SetCords(new Cords(4, Terrain[4]+2));
-                //LC.WriteChar((char)30, (short)0x2);
-
-                //await Task.Delay(100);
-            }
+                }
+            }).Start();
         }
+
+
+        /// <summary>
+        /// This Function is not Enviromenaly Frendly 
+        /// </summary>
+        /// <param name="onein"></param>
+        /// <returns></returns>
+        static bool[] GenTrash(int onein)
+        {
+            Random r = new Random();
+            int width = LC.Width - 1;
+
+            List<bool> trash = new List<bool>();
+
+            trash.Add(false);
+            for (int i = 0; i < width; i += 2)
+            {
+                int am = r.Next(onein+1);
+                trash.Add(am == 1);
+                trash.Add(false);
+            }
+
+            return trash.ToArray();
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="start">start hight 1-9</param>
         /// <param name="tend">to up or down 5 normal</param>
-        /// <returns></returns>
+        /// <returns>Terrain</returns>
         static int[] GenTerrain(int start = 5, int tend = 5)
         {
             Random r = new Random();
-            int width = Console.WindowWidth-1;
+            int width = LC.Width-1;
             
             List<int> terrain = new List<int>();
             terrain.Add(start);
@@ -89,7 +121,10 @@ namespace School_App_2020
             {
                 for (int y = 1; y <= my; y++)
                 {
+
                     int curser = x+( LC.Height - y)*LC.Width;
+                    if (curser >= LC.Buffer.Length)
+                        curser--;
                     LC.Buffer[curser].Char.AsciiChar = 219;
                     LC.Buffer[curser].Attributes = 0x2;
                 }

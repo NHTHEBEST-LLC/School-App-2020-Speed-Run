@@ -12,12 +12,8 @@ namespace School_App_2020
     {
         static  void Main(string[] args)
         {
-
-          
-
-
-
-
+            // start the painting of the console game
+            // this function is does not return 
             TUI.Paint();
             
             while (true)
@@ -31,10 +27,6 @@ namespace School_App_2020
                     TUI.PlayerMove(-1);
 
             }
-
-
-            if (Console.ReadKey().Key == ConsoleKey.R)
-                Main(args);
         }
     }
 }
