@@ -27,8 +27,10 @@ namespace School_App_2020
         private static int[] Terrain = GenTerrain(7, 3);
         private static bool[] Trash = GenTrash(1);
         private static int Score = 0;
+        private static int NumberofTrash;
         private static Stopwatch timer = new Stopwatch();
         private static bool Alive = true;
+        private static bool Win = false;
         public static Cords Player
         {
             private set
@@ -68,12 +70,19 @@ namespace School_App_2020
 
                         PaintTrash();
                         PaintPlayer();
+
+                        if (Win)
+                        {
+                            timer.Stop();
+                            PrintAT(@"You Win Press R to Restart", new Cords(40, LC.Height - (13)), 0x34);
+
+                        }
                     }
 
                     if (!Alive)
                     {
-                        int mgsx = 20;
-                        int msgy = 10;
+                        int mgsx = 30;
+                        int msgy = 13;
 
                         //PrintAT(@"██╗░░░██╗░█████╗░██╗░░░██╗  ██████╗░██╗███████╗██████╗░", new Cords(mgsx, LC.Height - (msgy + 0)), 0x40);
                         //PrintAT(@"╚██╗░██╔╝██╔══██╗██║░░░██║  ██╔══██╗██║██╔════╝██╔══██╗", new Cords(mgsx, LC.Height - (msgy + 1)), 0x40);
@@ -103,22 +112,7 @@ namespace School_App_2020
                         LC.Writeints(l6, 0x40);
 
                         PrintAT(@"                    Press R To Restart                 ", new Cords(mgsx, LC.Height - (msgy + 7)), 0x40);
-                        bool notrestart = true;
-                        while (notrestart)
-                        {
-                            if (Console.ReadKey().Key == ConsoleKey.R)
-                            {
-                                timer.Reset();
-                                timer.Stop();
-                                first = true;
-                                Alive = true;
-                                Score = 0;
-                                _Player = new Cords(0, 0);
-                                Terrain = GenTerrain(7, 3);
-                                Trash = GenTrash(1);
-                                notrestart = false;
-                            }
-                        }
+                        
                     }
 
 
@@ -130,6 +124,18 @@ namespace School_App_2020
             }).Start();
         }
 
+        public static void Restart()
+        {
+            timer.Reset();
+            timer.Stop();
+            first = true;
+            Alive = true;
+            Win = false;
+            Score = 0;
+            _Player = new Cords(0, 0);
+            Terrain = GenTerrain(7, 3);
+            Trash = GenTrash(1);
+        }
 
         /// <summary>
         /// This Function is not Enviromenaly Frendly 
@@ -151,6 +157,12 @@ namespace School_App_2020
                 trash.Add(false);
             }
 
+            NumberofTrash = 0;
+            foreach (var item in trash)
+            {
+                if (item)
+                    NumberofTrash++;
+            }
             return trash.ToArray();
         }
 
@@ -227,8 +239,13 @@ namespace School_App_2020
             {
                 Trash[x] = false;
                 Score++;
+                NumberofTrash--;
+                if(NumberofTrash ==0)
+                {
+                    Win = true;
+                }
             }
-            else
+            else if (!Win)
             {
                 Score -= 3;
                 // check if neg
