@@ -25,6 +25,8 @@ namespace School_App_2020
                 //else if (x == ConsoleKey.Spacebar)
                 else if (x == ConsoleKey.LeftArrow)
                     TUI.PlayerMove(-1);
+                else if (x == ConsoleKey.Spacebar)
+                    TUI.Pickup();
 
             }
         }

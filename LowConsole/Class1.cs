@@ -70,7 +70,8 @@ namespace LowConsole
         /// </summary>
         /// <param name="x">X Value</param>
         /// <param name="y">Y Vakue</param>
-        public static void setCuser(int x, int y)
+        /// <returns>The element in the buffer array</returns>
+        public static int setCuser(int x, int y)
         {
             int c = (y * Width) + x;
             if (c < Width * Height)
@@ -79,6 +80,7 @@ namespace LowConsole
             {
                 throw new IndexOutOfRangeException("X or Y Too Big");
             }
+            return curser;
         }
 
         /// <summary>
@@ -95,6 +97,19 @@ namespace LowConsole
         }
 
         /// <summary>
+        /// Writes a string to the buffer (buts from int array)
+        /// </summary>
+        /// <param name="text">text to write</param>
+        /// <param name="color">color to write in</param>
+        public static void Writeints(int[] text, int color)
+        {
+            foreach (int c in text)
+            {
+                WriteChar((char)c, (short)color);
+            }
+        }
+
+        /// <summary>
         /// Writes one char to the buffer 
         /// </summary>
         /// <param name="c">char to write</param>
@@ -106,12 +121,12 @@ namespace LowConsole
                 new Thread(WriteBufferLoop).Start();
                 first = false;
             }
+            int xy = curser;
+            if (xy >= Buffer.Length)
+                xy = Buffer.Length - 1;
 
-            if (curser >= Buffer.Length)
-                curser = Buffer.Length - 1;
-
-            Buffer[curser].Char.UnicodeChar = c;
-            Buffer[curser].Attributes = color;
+            Buffer[xy].Char.UnicodeChar = c;
+            Buffer[xy].Attributes = color;
             curser++;
         }
 
