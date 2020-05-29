@@ -108,6 +108,8 @@ namespace School_App_2020
             {
                 while (true)
                 {
+                    Console.WindowHeight = LC.Height;
+                    Console.WindowWidth = LC.Width;
                     int del = 1000 / fps;
                     Console.CursorVisible = false;
                     var sw = Stopwatch.StartNew();
