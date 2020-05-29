@@ -8,29 +8,79 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using LowConsole;
+using School_App_2020.Properties;
 
 namespace School_App_2020
 {
+    /// <summary>
+    /// 
+    /// </summary>
     struct Cords
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public int X;
+        /// <summary>
+        /// 
+        /// </summary>
         public int Y;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public Cords(int x, int y)
         {
             X = x;
             Y = y;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
     static class TUI
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private static Cords _Player = new Cords(0, 0);
+        /// <summary>
+        /// 
+        /// </summary>
         private static int[] Terrain = GenTerrain(7, 3);
+        /// <summary>
+        /// 
+        /// </summary>
         private static bool[] Trash = GenTrash(1);
+        /// <summary>
+        /// 
+        /// </summary>
         private static int Score = 0;
+        /// <summary>
+        /// 
+        /// </summary>
         private static int NumberofTrash;
+        /// <summary>
+        /// 
+        /// </summary>
+        private static int NonChangingNumberofTrash;
+        /// <summary>
+        /// 
+        /// </summary>
         private static Stopwatch timer = new Stopwatch();
+        /// <summary>
+        /// 
+        /// </summary>
         private static bool Alive = true;
+        /// <summary>
+        /// 
+        /// </summary>
         private static bool Win = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
         public static Cords Player
         {
             private set
@@ -44,9 +94,16 @@ namespace School_App_2020
                 return new Cords(x, y);
             }
         }
-        static int fps = 1000;
+        /// <summary>
+        /// 
+        /// </summary>
+        static int fps = 60;
+        /// <summary>
+        /// 
+        /// </summary>
         static public void Paint()
         {
+
             new Thread(() =>
             {
                 while (true)
@@ -60,12 +117,31 @@ namespace School_App_2020
                     else
                         LC.Clear(0x44);
 
+                    
 
 
                     if (Alive)
                     {
-                        PrintAT(string.Format("Score = {0}", Score), new Cords(4, LC.Height - 3), 0x04);
-                        PrintAT(string.Format("Time = {0}", timer.Elapsed.ToString("mm\\:ss\\.ff")), new Cords(4, LC.Height - 4), 0x04);
+                        if (first)
+                        {
+                            PrintAT("Instructions", new Cords(4, LC.Height - 10), 0x34);
+                            PrintAT("Space To Pickup", new Cords(4, LC.Height - 11), 0x34);
+                            PrintAT("Right Arrow to Move Right", new Cords(4, LC.Height - 11), 0x34);
+                            PrintAT("Left Arrow To move Left", new Cords(4, LC.Height - 12), 0x34);
+                            PrintAT("Don't Miss (You Die When you have less than one heart)", new Cords(4, LC.Height - 13), 0x34);
+                        }
+                        string hs = string.Format("High Score = {0}", Settings.Default.HighScore);
+                        PrintAT(hs, new Cords(LC.Width - (4+hs.Length), LC.Height - 4), 0x34);
+
+                        PrintAT(string.Format("Score = {0}/{1}  {2}%", Score, NonChangingNumberofTrash, (Score*100)/NonChangingNumberofTrash), new Cords(4, LC.Height - 3), 0x34);
+                        PrintAT(string.Format("Time = {0}", timer.Elapsed.ToString("mm\\:ss\\.ff")), new Cords(4, LC.Height - 4), 0x34);
+                        List<int> HARTS = new List<int>();
+                        for (int i = -1; i < Score/3; i++)
+                        {
+                            HARTS.Add(3);
+                        }
+                        SetCords(new Cords(4, LC.Height - 5));
+                        LC.Writeints(HARTS.ToArray(), 0x34);
                         PaintTerrain();
 
                         PaintTrash();
@@ -75,7 +151,16 @@ namespace School_App_2020
                         {
                             timer.Stop();
                             PrintAT(@"You Win Press R to Restart", new Cords(40, LC.Height - (13)), 0x34);
-
+                            int final = (Score * 100) / NonChangingNumberofTrash;
+                            final = final * 100;
+                            final = final / (int)(timer.ElapsedMilliseconds / 100);
+                            PrintAT(string.Format("Total Score = {0}",final), new Cords(40, LC.Height - (14)), 0x34);
+                            if (final > Settings.Default.HighScore)
+                            {
+                                Settings.Default.HighScore = final;
+                                Settings.Default.Save();
+                            }
+                                
                         }
                     }
 
@@ -90,7 +175,7 @@ namespace School_App_2020
                         //PrintAT(@"░░╚██╔╝░░██║░░██║██║░░░██║  ██║░░██║██║██╔══╝░░██║░░██║", new Cords(mgsx, LC.Height - (msgy + 3)), 0x40);
                         //PrintAT(@"░░░██║░░░╚█████╔╝╚██████╔╝  ██████╔╝██║███████╗██████╔╝", new Cords(mgsx, LC.Height - (msgy + 4)), 0x40);
                         //PrintAT(@"░░░╚═╝░░░░╚════╝░░╚═════╝░  ╚═════╝░╚═╝╚══════╝╚═════╝░", new Cords(mgsx, LC.Height - (msgy + 5)), 0x40);
-
+                        
                         int[] l1 = new int[] { 219, 219, 187, 176, 176, 176, 219, 219, 187, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 32, 32, 219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176 };
                         int[] l2 = new int[] { 200, 219, 219, 187, 176, 219, 219, 201, 188, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 219, 219, 186, 32, 32, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187 };
                         int[] l3 = new int[] { 176, 200, 219, 219, 219, 219, 201, 188, 176, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 186, 176, 176, 176, 219, 219, 186, 32, 32, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 186, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 186, 176, 176, 219, 219, 186 };
@@ -123,7 +208,9 @@ namespace School_App_2020
                 }
             }).Start();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Restart()
         {
             timer.Reset();
@@ -163,6 +250,7 @@ namespace School_App_2020
                 if (item)
                     NumberofTrash++;
             }
+            NonChangingNumberofTrash = NumberofTrash;
             return trash.ToArray();
         }
 
@@ -195,6 +283,9 @@ namespace School_App_2020
             }
             return terrain.ToArray();
         }
+        /// <summary>
+        /// 
+        /// </summary>
         static void PaintTerrain()
         {
             int x = 0;
@@ -214,7 +305,9 @@ namespace School_App_2020
                 x++;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         static void PaintTrash()
         {
             int x = 0;
@@ -232,6 +325,9 @@ namespace School_App_2020
                 x++;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Pickup()
         {
             int x = Player.X;
@@ -255,11 +351,21 @@ namespace School_App_2020
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
         static bool first = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
         public static void PlayerMove(int info)
         {
             if (first)
+            {
                 timer.Start();
+                first = false;
+            }
             SetCords(Player);
             if (Alive)
                 LC.WriteChar(' ', 0x33);
@@ -273,8 +379,9 @@ namespace School_App_2020
         }
 
 
-        // us char 30 ▲ for trash
-
+        /// <summary>
+        /// 
+        /// </summary>
         static void PaintPlayer()
         {
             //PrintAT(2, Player, ConsoleColor.Cyan, ConsoleColor.Red);
@@ -289,7 +396,12 @@ namespace School_App_2020
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="cords"></param>
+        /// <param name="color"></param>
         static void PrintAT(string text, Cords cords, int color)
         {
 
@@ -300,7 +412,10 @@ namespace School_App_2020
 
             LC.Write(text, (char)color);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cords"></param>
         static void SetCords(Cords cords)
         {
             //Console.SetCursorPosition(cords.X, Console.WindowHeight - cords.Y);

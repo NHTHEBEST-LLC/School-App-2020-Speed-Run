@@ -10,6 +10,10 @@ namespace School_App_2020
 {
     class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         static  void Main(string[] args)
         {
             // start the painting of the console game

@@ -10,6 +10,7 @@ using System.Threading;
 
 namespace LowConsole
 {
+
     [StructLayout(LayoutKind.Explicit)]
     public struct CharUnion
     {
