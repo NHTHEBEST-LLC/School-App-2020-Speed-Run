@@ -1,86 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using LowConsole;
 using School_App_2020.Properties;
 
 namespace School_App_2020
 {
     /// <summary>
-    /// 
+    /// this is the object for the coredents on screen
+    /// starts from bottom left
     /// </summary>
     struct Cords
     {
         /// <summary>
-        /// 
+        /// the x value
         /// </summary>
         public int X;
         /// <summary>
-        /// 
+        /// the y value
         /// </summary>
         public int Y;
         /// <summary>
-        /// 
+        /// this make a new cords object
+        /// from bottom left
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">x value</param>
+        /// <param name="y">y value</param>
         public Cords(int x, int y)
         {
             X = x;
             Y = y;
         }
     }
+
     /// <summary>
-    /// 
+    /// the Text User Interface
+    /// the main game class
     /// </summary>
     static class TUI
     {
         /// <summary>
-        /// 
+        /// the player cords
         /// </summary>
         private static Cords _Player = new Cords(0, 0);
         /// <summary>
-        /// 
+        /// the array for the terrain hight
         /// </summary>
         private static int[] Terrain = GenTerrain(7, 3);
         /// <summary>
-        /// 
+        /// the array for if the top of this terrain contains trash
         /// </summary>
         private static bool[] Trash = GenTrash(1);
         /// <summary>
-        /// 
+        /// the score
         /// </summary>
         private static int Score = 0;
         /// <summary>
+        /// number of trash on screen
         /// 
         /// </summary>
         private static int NumberofTrash;
         /// <summary>
-        /// 
+        /// number of trash genorated
         /// </summary>
         private static int NonChangingNumberofTrash;
         /// <summary>
-        /// 
+        /// the timer for when playing
         /// </summary>
         private static Stopwatch timer = new Stopwatch();
         /// <summary>
-        /// 
+        /// defines if you get killed
         /// </summary>
         private static bool Alive = true;
         /// <summary>
-        /// 
+        /// defines if you win
         /// </summary>
         private static bool Win = false;
+
         /// <summary>
-        /// 
+        /// the public player cords
         /// </summary>
-        /// 
         public static Cords Player
         {
             private set
@@ -95,11 +95,13 @@ namespace School_App_2020
             }
         }
         /// <summary>
-        /// 
+        /// the max frames per second
         /// </summary>
         static int fps = 60;
         /// <summary>
-        /// 
+        /// the paint function
+        /// start a thread that controles the screen
+        /// shuld only be called once
         /// </summary>
         static public void Paint()
         {
@@ -212,7 +214,7 @@ namespace School_App_2020
             }).Start();
         }
         /// <summary>
-        /// 
+        /// restarts the game
         /// </summary>
         public static void Restart()
         {
@@ -258,7 +260,7 @@ namespace School_App_2020
         }
 
         /// <summary>
-        /// 
+        /// genorates the terrain
         /// </summary>
         /// <param name="start">start hight 1-9</param>
         /// <param name="tend">to up or down 5 normal</param>
@@ -287,7 +289,7 @@ namespace School_App_2020
             return terrain.ToArray();
         }
         /// <summary>
-        /// 
+        /// paints the terrain
         /// </summary>
         static void PaintTerrain()
         {
@@ -309,7 +311,7 @@ namespace School_App_2020
             }
         }
         /// <summary>
-        /// 
+        /// paints the trash
         /// </summary>
         static void PaintTrash()
         {
@@ -329,7 +331,8 @@ namespace School_App_2020
             }
         }
         /// <summary>
-        /// 
+        /// trys to pickup the trash 
+        /// reduces lives if failed
         /// </summary>
         public static void Pickup()
         {
@@ -355,13 +358,13 @@ namespace School_App_2020
             }
         }
         /// <summary>
-        /// 
+        /// first time moveing in game
         /// </summary>
         static bool first = true;
         /// <summary>
-        /// 
+        /// moves the player
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="info">how mutch - is left </param>
         public static void PlayerMove(int info)
         {
             if (first)
@@ -380,6 +383,9 @@ namespace School_App_2020
             }
             PaintPlayer();
         }
+        /// <summary>
+        /// resets the high score
+        /// </summary>
         public static void HSR()
         {
             Settings.Default.HighScore = 0;
@@ -387,9 +393,9 @@ namespace School_App_2020
             Settings.Default.Save();
         }
         /// <summary>
-        /// 
+        /// cheats the game
         /// </summary>
-        /// <param name="all"></param>
+        /// <param name="all">if true the whole game gets completed</param>
         public static void Cheat(bool all)
         {
             _Player.X = 0;
@@ -406,11 +412,10 @@ namespace School_App_2020
         }
 
         /// <summary>
-        /// 
+        /// paints the player on screen
         /// </summary>
         static void PaintPlayer()
         {
-            //PrintAT(2, Player, ConsoleColor.Cyan, ConsoleColor.Red);
             SetCords(Player);
             if (Alive)
                 if (DateTime.Now.Second % 2 == 0)
@@ -423,28 +428,22 @@ namespace School_App_2020
 
 
         /// <summary>
-        /// 
+        /// prints text at a location
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="cords"></param>
-        /// <param name="color"></param>
+        /// <param name="text">text to print</param>
+        /// <param name="cords">place</param>
+        /// <param name="color">color</param>
         static void PrintAT(string text, Cords cords, int color)
         {
-
-            //SetColor(background, forground);
             SetCords(cords);
-            //Console.Write(text);
-
-
             LC.Write(text, (char)color);
         }
         /// <summary>
-        /// 
+        /// sets the cuser
         /// </summary>
-        /// <param name="cords"></param>
+        /// <param name="cords">place</param>
         static void SetCords(Cords cords)
         {
-            //Console.SetCursorPosition(cords.X, Console.WindowHeight - cords.Y);
             LC.setCuser(cords.X, LC.Height - cords.Y);
         }
 

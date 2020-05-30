@@ -1,44 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
 
 namespace School_App_2020
 {
     class Program
     {
         /// <summary>
-        /// 
+        /// this is the main funtion thats starts the program
         /// </summary>
-        /// <param name="args"></param>
-        static  void Main(string[] args)
+        /// <param name="args">command line args (not used)</param>
+        static void Main(string[] args)
         {
             // start the painting of the console game
-            // this function is does not return 
             TUI.Paint();
             
+            // forever
             while (true)
             {
+                // read key
                 ConsoleKeyInfo keyInfo = Console.ReadKey();
                 ConsoleKey x = keyInfo.Key;
+
+                // check if key pressed does somthing
                 if (x == ConsoleKey.RightArrow)
-                    TUI.PlayerMove(1);
-                //else if (x == ConsoleKey.Spacebar)
+                    TUI.PlayerMove(1); // move right one
                 else if (x == ConsoleKey.LeftArrow)
-                    TUI.PlayerMove(-1);
+                    TUI.PlayerMove(-1); // move left one
                 else if (x == ConsoleKey.Spacebar)
-                    TUI.Pickup();
+                    TUI.Pickup(); // try to pick up
                 else if (x == ConsoleKey.R)
-                    TUI.Restart();
+                    TUI.Restart(); // restart game
                 else if (x == ConsoleKey.Escape)
-                    TUI.Cheat(true);
+                    TUI.Cheat(true); // cheat the whole game
                 else if (x == ConsoleKey.N)
-                    TUI.Cheat(false);
+                    TUI.Cheat(false); // cheat to next trash
                 else if (x == ConsoleKey.NumPad0)
-                    TUI.HSR();
+                    TUI.HSR(); // reset high score
 
             }
         }
