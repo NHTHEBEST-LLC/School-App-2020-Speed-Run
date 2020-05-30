@@ -312,25 +312,31 @@ namespace School_App_2020
         /// <returns>Terrain</returns>
         static int[] GenTerrain(int start = 5, int tend = 5)
         {
-            Random r = new Random();
-            int width = LC.Width - 1;
+            Random r = new Random(); // new randome number gen
+            int width = LC.Width - 1; // set max width
 
-            List<int> terrain = new List<int>();
-            terrain.Add(start);
+            List<int> terrain = new List<int>(); // new list of ints
+            terrain.Add(start); // set the start hight
+            // for the whole screen
             for (int i = 0; i < width; i += 2)
             {
-                int last = terrain[i];
-                int min = last * 10 - 10 + tend;
+                int last = terrain[i]; // get the last hight
+                int min = last * 10 - 10 + tend; // get min and max
                 int max = last * 10 + 10 + tend;
+                // check the min and max
                 if (min < 0)
                     min = 0;
                 if (max >= 100)
                     max = 100;
+                // gat random number
                 int next = r.Next(min, max + 1) / 10;
+                // make shure its at least one
                 if (next <= 0)
                     next = 1;
+                // set 2 of the terrain to it
                 terrain.Add(next); terrain.Add(next);
             }
+            // retrun the terrain
             return terrain.ToArray();
         }
         /// <summary>
