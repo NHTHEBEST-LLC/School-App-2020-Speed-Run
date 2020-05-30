@@ -263,27 +263,31 @@ namespace School_App_2020
         /// <returns></returns>
         static bool[] GenTrash(int onein)
         {
-            Random r = new Random();
-            int width = LC.Width - 1;
+            Random r = new Random(); // new random number gen
+            int width = LC.Width - 1; // get the max width
 
-            List<bool> trash = new List<bool>();
+            List<bool> trash = new List<bool>(); // new bool list
 
-            trash.Add(false);
+            trash.Add(false);// start with no trash
+
+            // for each or the collums 
             for (int i = 0; i < width; i += 2)
             {
-                int am = r.Next(onein + 1);
-                trash.Add(am == 1);
-                trash.Add(false);
+                int am = r.Next(onein + 1); // get randome number
+                trash.Add(am == 1); // add true if = true or false if false
+                trash.Add(false); // dont have 2 trash next to eachother
             }
 
+            // clear the trash varubale
             NumberofTrash = 0;
+            // loop on the trash array
             foreach (var item in trash)
             {
-                if (item)
-                    NumberofTrash++;
+                if (item) // trash
+                    NumberofTrash++; // incriment
             }
-            NonChangingNumberofTrash = NumberofTrash;
-            return trash.ToArray();
+            NonChangingNumberofTrash = NumberofTrash; // set the genorated number to the new number
+            return trash.ToArray(); // reteurn array
         }
 
         /// <summary>
