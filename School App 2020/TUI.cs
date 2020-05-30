@@ -291,6 +291,20 @@ namespace School_App_2020
         }
 
         /// <summary>
+        /// this gets less trash for a faster time and higher score
+        /// </summary>
+        public static void Spead()
+        {
+            bool nok = true; // set temp var
+            while(nok)
+            {
+                Restart(); // restart
+
+                nok = !(NonChangingNumberofTrash <= 20); // exit if less or eq to 20 trash
+            }
+        }
+
+        /// <summary>
         /// genorates the terrain
         /// </summary>
         /// <param name="start">start hight 1-9</param>

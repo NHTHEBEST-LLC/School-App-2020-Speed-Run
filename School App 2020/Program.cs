@@ -35,7 +35,8 @@ namespace School_App_2020
                     TUI.Cheat(false); // cheat to next trash
                 else if (x == ConsoleKey.NumPad0)
                     TUI.HSR(); // reset high score
-
+                else if (x == ConsoleKey.F)
+                    TUI.Spead(); // set up for spead run
             }
         }
     }
