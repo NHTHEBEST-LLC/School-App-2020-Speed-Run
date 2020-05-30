@@ -85,11 +85,12 @@ namespace School_App_2020
         {
             private set
             {
-                _Player = value;
+                _Player = value; // sets the private vaubale 
             }
             get
             {
-                int x = _Player.X;
+                // gets the player cords
+                int x = _Player.X; 
                 int y = Terrain[x] + 1;
                 return new Cords(x, y);
             }
@@ -105,41 +106,51 @@ namespace School_App_2020
         /// </summary>
         static public void Paint()
         {
-
+            // make new thread
             new Thread(() =>
             {
+                // foever
                 while (true)
                 {
+                    // make shure the console is correct
                     Console.WindowHeight = LC.Height;
                     Console.WindowWidth = LC.Width;
-                    
-                    int del = 1000 / fps;
                     Console.CursorVisible = false;
+
+                    // check fps
+                    int del = 1000 / fps;
                     var sw = Stopwatch.StartNew();
 
+                    // check if alive
                     if (Alive)
-                        LC.Clear(0x33);
+                        LC.Clear(0x33); // print sky
                     else
-                        LC.Clear(0x44);
+                        LC.Clear(0x44); // print red
 
                     
 
-
+                    // check if alive
                     if (Alive)
                     {
+                        // check if first time
                         if (first)
                         {
+                            // print instructions
                             PrintAT("Instructions", new Cords(4, LC.Height - 10), 0x34);
                             PrintAT("Space To Pickup", new Cords(4, LC.Height - 11), 0x34);
                             PrintAT("Right Arrow to Move Right", new Cords(4, LC.Height - 11), 0x34);
                             PrintAT("Left Arrow To move Left", new Cords(4, LC.Height - 12), 0x34);
                             PrintAT("Don't Miss (You Die When you have less than one heart)", new Cords(4, LC.Height - 13), 0x34);
                         }
+
+                        // print high score
                         string hs = string.Format("High Score = {0}", Settings.Default.HighScore);
                         PrintAT(hs, new Cords(LC.Width - (4+hs.Length), LC.Height - 4), 0x34);
 
+                        // print score and time
                         PrintAT(string.Format("Score = {0}/{1}  {2}%", Score, NonChangingNumberofTrash, (Score*100)/NonChangingNumberofTrash), new Cords(4, LC.Height - 3), 0x34);
                         PrintAT(string.Format("Time = {0}", timer.Elapsed.ToString("mm\\:ss\\.ff")), new Cords(4, LC.Height - 4), 0x34);
+                        // print harts 
                         List<int> HARTS = new List<int>();
                         for (int i = -1; i < Score/3; i++)
                         {
@@ -147,21 +158,31 @@ namespace School_App_2020
                         }
                         SetCords(new Cords(4, LC.Height - 5));
                         LC.Writeints(HARTS.ToArray(), 0x34);
+                        
+                        // paint terrain
                         PaintTerrain();
-
+                        // paint trash
                         PaintTrash();
+                        // paint player
                         PaintPlayer();
 
+                        // if you win
                         if (Win)
                         {
+                            // stop game timer
                             timer.Stop();
+                            // print win msg
                             PrintAT(@"You Win Press R to Restart", new Cords(40, LC.Height - (13)), 0x34);
+                            // calcualet final score
                             int final = (Score * 100) / NonChangingNumberofTrash;
                             final = final * 100;
                             final = final / (int)(timer.ElapsedMilliseconds / 100);
+                            // print score
                             PrintAT(string.Format("Total Score = {0}",final), new Cords(40, LC.Height - (14)), 0x34);
+                            // check if grater than high score
                             if (final > Settings.Default.HighScore)
                             {
+                                // save new high score
                                 Settings.Default.HighScore = final;
                                 Settings.Default.Save();
                             }
@@ -169,18 +190,21 @@ namespace School_App_2020
                         }
                     }
 
+                    // if dead
                     if (!Alive)
                     {
+                        // declare msg location
                         int mgsx = 30;
                         int msgy = 13;
 
-                        //PrintAT(@"██╗░░░██╗░█████╗░██╗░░░██╗  ██████╗░██╗███████╗██████╗░", new Cords(mgsx, LC.Height - (msgy + 0)), 0x40);
-                        //PrintAT(@"╚██╗░██╔╝██╔══██╗██║░░░██║  ██╔══██╗██║██╔════╝██╔══██╗", new Cords(mgsx, LC.Height - (msgy + 1)), 0x40);
-                        //PrintAT(@"░╚████╔╝░██║░░██║██║░░░██║  ██║░░██║██║█████╗░░██║░░██║", new Cords(mgsx, LC.Height - (msgy + 2)), 0x40);
-                        //PrintAT(@"░░╚██╔╝░░██║░░██║██║░░░██║  ██║░░██║██║██╔══╝░░██║░░██║", new Cords(mgsx, LC.Height - (msgy + 3)), 0x40);
-                        //PrintAT(@"░░░██║░░░╚█████╔╝╚██████╔╝  ██████╔╝██║███████╗██████╔╝", new Cords(mgsx, LC.Height - (msgy + 4)), 0x40);
-                        //PrintAT(@"░░░╚═╝░░░░╚════╝░░╚═════╝░  ╚═════╝░╚═╝╚══════╝╚═════╝░", new Cords(mgsx, LC.Height - (msgy + 5)), 0x40);
+                        //██╗░░░██╗░█████╗░██╗░░░██╗  ██████╗░██╗███████╗██████╗░
+                        //╚██╗░██╔╝██╔══██╗██║░░░██║  ██╔══██╗██║██╔════╝██╔══██╗
+                        //░╚████╔╝░██║░░██║██║░░░██║  ██║░░██║██║█████╗░░██║░░██║
+                        //░░╚██╔╝░░██║░░██║██║░░░██║  ██║░░██║██║██╔══╝░░██║░░██║
+                        //░░░██║░░░╚█████╔╝╚██████╔╝  ██████╔╝██║███████╗██████╔╝
+                        //░░░╚═╝░░░░╚════╝░░╚═════╝░  ╚═════╝░╚═╝╚══════╝╚═════╝░
                         
+                        // text ubove but in prinable format
                         int[] l1 = new int[] { 219, 219, 187, 176, 176, 176, 219, 219, 187, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 32, 32, 219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176 };
                         int[] l2 = new int[] { 200, 219, 219, 187, 176, 219, 219, 201, 188, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 219, 219, 186, 32, 32, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187 };
                         int[] l3 = new int[] { 176, 200, 219, 219, 219, 219, 201, 188, 176, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 186, 176, 176, 176, 219, 219, 186, 32, 32, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 186, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 186, 176, 176, 219, 219, 186 };
@@ -188,6 +212,7 @@ namespace School_App_2020
                         int[] l5 = new int[] { 176, 176, 176, 219, 219, 186, 176, 176, 176, 200, 219, 219, 219, 219, 219, 201, 188, 200, 219, 219, 219, 219, 219, 219, 201, 188, 32, 32, 219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 201, 188 };
                         int[] l6 = new int[] { 176, 176, 176, 200, 205, 188, 176, 176, 176, 176, 200, 205, 205, 205, 205, 188, 176, 176, 200, 205, 205, 205, 205, 205, 188, 176, 32, 32, 200, 205, 205, 205, 205, 205, 188, 176, 200, 205, 188, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 205, 205, 205, 205, 188, 176 };
 
+                        // prinst each line of msg
                         SetCords(new Cords(mgsx, LC.Height - (msgy + 0)));
                         LC.Writeints(l1, 0x40);
                         SetCords(new Cords(mgsx, LC.Height - (msgy + 1)));
@@ -201,16 +226,18 @@ namespace School_App_2020
                         SetCords(new Cords(mgsx, LC.Height - (msgy + 5)));
                         LC.Writeints(l6, 0x40);
 
+                        // print instruction
                         PrintAT(@"                    Press R To Restart                 ", new Cords(mgsx, LC.Height - (msgy + 7)), 0x40);
                         
                     }
 
-
+                    // wait as to not glich the screen
                     var ms = (int)sw.ElapsedMilliseconds;
                     if (ms < del)
                         Thread.Sleep(del - ms);
 
                 }
+                // start the thread
             }).Start();
         }
         /// <summary>
