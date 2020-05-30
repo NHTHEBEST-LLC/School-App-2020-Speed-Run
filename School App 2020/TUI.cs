@@ -438,8 +438,9 @@ namespace School_App_2020
         /// </summary>
         public static void HSR()
         {
+            // set high score to 0
             Settings.Default.HighScore = 0;
-
+            // save
             Settings.Default.Save();
         }
         /// <summary>
@@ -472,8 +473,6 @@ namespace School_App_2020
                     LC.WriteChar((char)2, 0x34);
                 else
                     LC.WriteChar((char)1, 0x34);
-
-
         }
 
 
