@@ -55,7 +55,7 @@ namespace School_App_2020
         /// <summary>
         /// the score
         /// </summary>
-        private static int Score = 0;
+        private static int Score;
         /// <summary>
         /// number of trash on screen
         /// 
@@ -76,7 +76,7 @@ namespace School_App_2020
         /// <summary>
         /// defines if you win
         /// </summary>
-        private static bool Win = false;
+        private static bool Win;
 
         /// <summary>
         /// the public player cords
@@ -337,7 +337,6 @@ namespace School_App_2020
                     LC.Buffer[curser].Char.AsciiChar = 219;
                     LC.Buffer[curser].Attributes = 0x2;
                 }
-                //printAtUnder(219, new Cords(x,y),  ConsoleColor.Green);
                 x++;
             }
         }

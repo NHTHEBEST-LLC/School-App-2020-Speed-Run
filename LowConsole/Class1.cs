@@ -38,14 +38,14 @@ namespace LowConsole
         
         static bool first = true;
 
-        static int curser = 0;
+        static int curser;
         static SafeFileHandle h = lowlevel.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
         /// <summary>
         /// Screen Buffer
         /// </summary>
         public static CharInfo[] Buffer = new CharInfo[Width * Height];
-        static lowlevel.SmallRect rect = new lowlevel.SmallRect() { Left = 0, Top = 0, Right = Width, Bottom = Height };
+        static lowlevel.SmallRect rect = new lowlevel.SmallRect { Left = 0, Top = 0, Right = Width, Bottom = Height };
 
         /// <summary>
         /// clears the buffer
@@ -139,11 +139,8 @@ namespace LowConsole
         {
             while (true)
             {
-                //var sw = Stopwatch.StartNew();
+                
                 WriteBuffer();
-                //var ms = (int)sw.ElapsedMilliseconds;
-                //if (ms < 16)
-                //    await Task.Delay(16 - ms);
                 
             }
         }
@@ -155,9 +152,9 @@ namespace LowConsole
         {
             if (!h.IsInvalid)
             {
-                bool b = lowlevel.WriteConsoleOutput(h, Buffer,
-                  new lowlevel.Coord() { X = Width, Y = Height },
-                  new lowlevel.Coord() { X = 0, Y = 0 },
+                lowlevel.WriteConsoleOutput(h, Buffer,
+                  new lowlevel.Coord { X = Width, Y = Height },
+                  new lowlevel.Coord { X = 0, Y = 0 },
                   ref rect
                  );
             }
