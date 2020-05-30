@@ -245,15 +245,15 @@ namespace School_App_2020
         /// </summary>
         public static void Restart()
         {
-            timer.Reset();
+            timer.Reset(); // reset timer
             timer.Stop();
-            first = true;
+            first = true; // reset globals
             Alive = true;
             Win = false;
             Score = 0;
             _Player = new Cords(0, 0);
-            Terrain = GenTerrain(7, 3);
-            Trash = GenTrash(1);
+            Terrain = GenTerrain(7, 3); // get new terrain
+            Trash = GenTrash(1);       // get new trash
         }
 
         /// <summary>
