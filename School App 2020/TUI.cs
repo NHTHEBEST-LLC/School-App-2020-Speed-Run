@@ -110,6 +110,7 @@ namespace School_App_2020
                 {
                     Console.WindowHeight = LC.Height;
                     Console.WindowWidth = LC.Width;
+                    
                     int del = 1000 / fps;
                     Console.CursorVisible = false;
                     var sw = Stopwatch.StartNew();
@@ -379,7 +380,30 @@ namespace School_App_2020
             }
             PaintPlayer();
         }
+        public static void HSR()
+        {
+            Settings.Default.HighScore = 0;
 
+            Settings.Default.Save();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="all"></param>
+        public static void Cheat(bool all)
+        {
+            _Player.X = 0;
+            foreach (var item in Trash)
+            {
+                if (item)
+                    if (all)
+                        Pickup();
+                    else
+                        break;
+                PlayerMove(1);
+                Thread.Sleep(1);
+            }
+        }
 
         /// <summary>
         /// 

@@ -33,6 +33,12 @@ namespace School_App_2020
                     TUI.Pickup();
                 else if (x == ConsoleKey.R)
                     TUI.Restart();
+                else if (x == ConsoleKey.Escape)
+                    TUI.Cheat(true);
+                else if (x == ConsoleKey.N)
+                    TUI.Cheat(false);
+                else if (x == ConsoleKey.NumPad0)
+                    TUI.HSR();
 
             }
         }
