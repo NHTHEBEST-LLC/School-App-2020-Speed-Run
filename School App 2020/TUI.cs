@@ -175,7 +175,7 @@ namespace School_App_2020
                             PrintAT(@"You Win Press R to Restart", new Cords(40, LC.Height - (13)), 0x34);
                             // calcualet final score
                             int final = (Score * 100) / NonChangingNumberofTrash;
-                            final = final * 100;
+                            final = final * 10000;
                             final = final / (int)(timer.ElapsedMilliseconds / 100);
                             // print score
                             PrintAT(string.Format("Total Score = {0}",final), new Cords(40, LC.Height - (14)), 0x34);
