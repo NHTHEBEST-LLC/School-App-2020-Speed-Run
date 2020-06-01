@@ -488,11 +488,13 @@ namespace School_App_2020
             LC.Write(text, (char)color);
         }
         /// <summary>
-        /// sets the cuser
+        /// sets the cuser 
+        /// 0,0 is bottem left
         /// </summary>
         /// <param name="cords">place</param>
         static void SetCords(Cords cords)
         {
+            // Conslole lib Set Curser and change 0,0 to bottem left
             LC.setCuser(cords.X, LC.Height - cords.Y);
         }
 
