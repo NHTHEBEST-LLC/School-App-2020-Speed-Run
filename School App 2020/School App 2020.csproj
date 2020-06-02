@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>School_App_2020</RootNamespace>
     <AssemblyName>School App 2020</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
