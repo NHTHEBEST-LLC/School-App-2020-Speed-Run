@@ -344,20 +344,26 @@ namespace School_App_2020
         /// </summary>
         static void PaintTerrain()
         {
+            // set x to 0
             int x = 0;
 
+            // for each hight in the terrain array
             foreach (int my in Terrain)
             {
+                // for 0 to the hight 
                 for (int y = 1; y <= my; y++)
                 {
-
+                    // calculate the curser
                     int curser = x + (LC.Height - y) * LC.Width;
+                    // check if its too big
+                    // (avoid error)
                     if (curser >= LC.Buffer.Length)
                         curser--;
+                    // set the screen buffter at the curset to the terrain
                     LC.Buffer[curser].Char.AsciiChar = 219;
                     LC.Buffer[curser].Attributes = 0x2;
                 }
-                x++;
+                x++;// increming x
             }
         }
         /// <summary>
@@ -365,19 +371,23 @@ namespace School_App_2020
         /// </summary>
         static void PaintTrash()
         {
-            int x = 0;
+            int x = 0;// set x to 0
+            // make a new char
             CharInfo @char = new CharInfo();
-            @char.Char.AsciiChar = 31;
-            @char.Attributes = 0x25;
+            @char.Char.AsciiChar = 31; // ▼
+            @char.Attributes = 0x25; 
+
+            // for each hight in terrain
             foreach (int my in Terrain)
             {
-                int curser = x + (LC.Height - my) * LC.Width;
+                int curser = x + (LC.Height - my) * LC.Width;// set and check curser
                 if (curser >= LC.Buffer.Length)
                     curser = LC.Buffer.Length - 1;
 
+                // if there is trash then print trash
                 if (Trash[x])
                     LC.Buffer[curser] = @char;
-                x++;
+                x++; // inc x
             }
         }
         /// <summary>
@@ -386,24 +396,25 @@ namespace School_App_2020
         /// </summary>
         public static void Pickup()
         {
-            int x = Player.X;
-            if (Trash[x])
+            int x = Player.X; // set x to players pos
+            if (Trash[x]) // if there is trash at location
             {
-                Trash[x] = false;
-                Score++;
-                NumberofTrash--;
-                if(NumberofTrash ==0)
+                Trash[x] = false; // remove the trash
+                Score++; // inc score
+                NumberofTrash--; // dec number of trash
+                if(NumberofTrash ==0) // check if no more trash
                 {
-                    Win = true;
+                    Win = true; // make the player win
                 }
             }
             else if (!Win)
             {
+                // remove 3 from score
                 Score -= 3;
                 // check if neg
                 if (Score < 0)
                 {
-                    Alive = false;
+                    Alive = false; // kill player
                 }
             }
         }
@@ -417,21 +428,22 @@ namespace School_App_2020
         /// <param name="info">how mutch - is left </param>
         public static void PlayerMove(int info)
         {
+            // if first time running
             if (first)
             {
-                timer.Start();
-                first = false;
+                timer.Start(); // start the timer
+                first = false; // disable the first run
             }
-            SetCords(Player);
-            if (Alive)
-                LC.WriteChar(' ', 0x33);
-            int x = Player.X;
-            int _new = x + info;
-            if (_new >= 0 && _new < Console.WindowWidth)
+            SetCords(Player); // put curser at player location
+            if (Alive) // if alive
+                LC.WriteChar(' ', 0x33); // remove the player from screen
+            int x = Player.X; // set x to player x
+            int _new = x + info; // set _new to x plus amount to move
+            if (_new >= 0 && _new < Console.WindowWidth) // check if its in boundrais 
             {
-                _Player.X = _new;
+                _Player.X = _new; // move player
             }
-            PaintPlayer();
+            PaintPlayer(); // paint new player
         }
         /// <summary>
         /// resets the high score
@@ -449,16 +461,16 @@ namespace School_App_2020
         /// <param name="all">if true the whole game gets completed</param>
         public static void Cheat(bool all)
         {
-            _Player.X = 0;
-            foreach (var item in Trash)
+            _Player.X = 0; // set player x to 0
+            foreach (var item in Trash) // for each location in trash array
             {
-                if (item)
-                    if (all)
-                        Pickup();
-                    else
-                        break;
-                PlayerMove(1);
-                Thread.Sleep(1);
+                if (item) // check if countains trash
+                    if (all) // if picup enabled 
+                        Pickup(); // picup
+                    else // else
+                        break; // exit foreach loop
+                PlayerMove(1); // move one right
+                Thread.Sleep(1); // sleep one ms
             }
         }
 
@@ -467,12 +479,12 @@ namespace School_App_2020
         /// </summary>
         static void PaintPlayer()
         {
-            SetCords(Player);
-            if (Alive)
-                if (DateTime.Now.Second % 2 == 0)
-                    LC.WriteChar((char)2, 0x34);
+            SetCords(Player); // set curser to player
+            if (Alive) // if alive
+                if (DateTime.Now.Second % 2 == 0) // make player change char
+                    LC.WriteChar((char)2, 0x34); // print ☻
                 else
-                    LC.WriteChar((char)1, 0x34);
+                    LC.WriteChar((char)1, 0x34); // print ☺
         }
 
 
@@ -484,8 +496,8 @@ namespace School_App_2020
         /// <param name="color">color</param>
         static void PrintAT(string text, Cords cords, int color)
         {
-            SetCords(cords);
-            LC.Write(text, (char)color);
+            SetCords(cords); // set curser to cords
+            LC.Write(text, (char)color); // print data
         }
         /// <summary>
         /// sets the cuser 
