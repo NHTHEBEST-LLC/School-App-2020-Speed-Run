@@ -90,7 +90,7 @@ namespace School_App_2020
             get
             {
                 // gets the player cords
-                int x = _Player.X; 
+                int x = _Player.X;
                 int y = Terrain[x] + 1;
                 return new Cords(x, y);
             }
@@ -127,7 +127,7 @@ namespace School_App_2020
                     else
                         LC.Clear(0x44); // print red
 
-                    
+
 
                     // check if alive
                     if (Alive)
@@ -145,20 +145,21 @@ namespace School_App_2020
 
                         // print high score
                         string hs = string.Format("High Score = {0}", Settings.Default.HighScore);
-                        PrintAT(hs, new Cords(LC.Width - (4+hs.Length), LC.Height - 4), 0x34);
+                        PrintAT(hs, new Cords(LC.Width - (4 + hs.Length), LC.Height - 4), 0x34);
 
                         // print score and time
-                        PrintAT(string.Format("Score = {0}/{1}  {2}%", Score, NonChangingNumberofTrash, (Score*100)/NonChangingNumberofTrash), new Cords(4, LC.Height - 3), 0x34);
+                        
+                        PrintAT(string.Format("Score = {0}/{1}  {2}%", Score, NonChangingNumberofTrash, (Score * 100) / NonChangingNumberofTrash), new Cords(4, LC.Height - 3), 0x34);
                         PrintAT(string.Format("Time = {0}", timer.Elapsed.ToString("mm\\:ss\\.ff")), new Cords(4, LC.Height - 4), 0x34);
                         // print harts 
                         List<int> HARTS = new List<int>();
-                        for (int i = -1; i < Score/3; i++)
+                        for (int i = -1; i < Score / 3; i++)
                         {
                             HARTS.Add(3);
                         }
                         SetCords(new Cords(4, LC.Height - 5));
                         LC.Writeints(HARTS.ToArray(), 0x34);
-                        
+
                         // paint terrain
                         PaintTerrain();
                         // paint trash
@@ -178,7 +179,7 @@ namespace School_App_2020
                             final = final * 10000;
                             final = final / (int)(timer.ElapsedMilliseconds / 100);
                             // print score
-                            PrintAT(string.Format("Total Score = {0}",final), new Cords(40, LC.Height - (14)), 0x34);
+                            PrintAT(string.Format("Total Score = {0}", final), new Cords(40, LC.Height - (14)), 0x34);
                             // check if grater than high score
                             if (final > Settings.Default.HighScore)
                             {
@@ -186,7 +187,7 @@ namespace School_App_2020
                                 Settings.Default.HighScore = final;
                                 Settings.Default.Save();
                             }
-                                
+
                         }
                     }
 
@@ -203,7 +204,7 @@ namespace School_App_2020
                         //░░╚██╔╝░░██║░░██║██║░░░██║  ██║░░██║██║██╔══╝░░██║░░██║
                         //░░░██║░░░╚█████╔╝╚██████╔╝  ██████╔╝██║███████╗██████╔╝
                         //░░░╚═╝░░░░╚════╝░░╚═════╝░  ╚═════╝░╚═╝╚══════╝╚═════╝░
-                        
+
                         // text ubove but in prinable format
                         int[] l1 = new int[] { 219, 219, 187, 176, 176, 176, 219, 219, 187, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 32, 32, 219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176 };
                         int[] l2 = new int[] { 200, 219, 219, 187, 176, 219, 219, 201, 188, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 219, 219, 186, 32, 32, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187 };
@@ -228,7 +229,7 @@ namespace School_App_2020
 
                         // print instruction
                         PrintAT(@"                    Press R To Restart                 ", new Cords(mgsx, LC.Height - (msgy + 7)), 0x40);
-                        
+
                     }
 
                     // wait as to not glich the screen
@@ -269,13 +270,21 @@ namespace School_App_2020
             List<bool> trash = new List<bool>(); // new bool list
 
             trash.Add(false);// start with no trash
-
+            NumberofTrash = 0;
             // for each or the collums 
             for (int i = 0; i < width; i += 2)
             {
+
                 int am = r.Next(onein + 1); // get randome number
-                trash.Add(am == 1); // add true if = true or false if false
+
+                if (NumberofTrash < 15)
+                    trash.Add(am == 1); // add true if = true or false if false
+                else
+                    trash.Add(false);
+                if (am == 1)
+                    NumberofTrash ++; 
                 trash.Add(false); // dont have 2 trash next to eachother
+                
             }
 
             // clear the trash varubale
@@ -296,7 +305,7 @@ namespace School_App_2020
         public static void Spead()
         {
             bool nok = true; // set temp var
-            while(nok)
+            while (nok)
             {
                 Restart(); // restart
 
@@ -367,6 +376,85 @@ namespace School_App_2020
             }
         }
         /// <summary>
+        /// Gets The Best Run fast
+        /// </summary>
+        public static void FastRestart()
+        {
+            bool nok = false; // set temp var
+            Restart();
+            int i = 0;
+            while (!nok)
+            {
+                if (i > 1000)
+                {
+                    Terrain = GenTerrain(7, 3);
+                    i = 0;
+                }
+
+                Trash = GenTrash(2);
+
+                bool amount = (NonChangingNumberofTrash == 15);
+                bool cluserGaps = false;
+                bool clutsers = (GetClusters(2, 5, out cluserGaps) == 6);
+                bool End = (LastTrashFromEnd() >= 10); // suhdl be around 10
+
+                nok = amount && clutsers && cluserGaps && End;
+                i++;
+            }
+        }
+
+
+
+        /// <summary>
+        /// gets lenth from enf to trash
+        /// </summary>
+        /// <returns></returns>
+        static int LastTrashFromEnd()
+        {
+            for (int i = LC.Width ; i >= 0; i--)
+            {
+                if (Trash[i])
+                    return LC.Width-i;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// get The Number Of Clusers 
+        /// </summary>
+        /// <param name="gapSize">Max Size Of gap</param>
+        /// <returns></returns>
+        static int GetClusters(int gapSize, int mingapsize, out bool cluserGaps)
+        {
+            int clulsers = 0;
+            int numofSpace = 0;
+
+            cluserGaps = true;
+
+            foreach (bool x in Trash)
+            {
+                if (x)
+                {
+                    if (numofSpace > gapSize+1)
+                    {
+                        clulsers++;
+                        if (numofSpace < mingapsize)
+                        {
+                            cluserGaps = false;
+                        }
+                    }
+                    numofSpace = 0;
+                }
+                else
+                {
+                    numofSpace++;
+                }
+
+
+            }
+            return clulsers;
+        }
+        /// <summary>
         /// paints the trash
         /// </summary>
         static void PaintTrash()
@@ -375,7 +463,7 @@ namespace School_App_2020
             // make a new char
             CharInfo @char = new CharInfo();
             @char.Char.AsciiChar = 31; // ▼
-            @char.Attributes = 0x25; 
+            @char.Attributes = 0x25;
 
             // for each hight in terrain
             foreach (int my in Terrain)
@@ -402,7 +490,7 @@ namespace School_App_2020
                 Trash[x] = false; // remove the trash
                 Score++; // inc score
                 NumberofTrash--; // dec number of trash
-                if(NumberofTrash ==0) // check if no more trash
+                if (NumberofTrash == 0) // check if no more trash
                 {
                     Win = true; // make the player win
                 }

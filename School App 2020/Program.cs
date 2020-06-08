@@ -28,15 +28,11 @@ namespace School_App_2020
                 else if (x == ConsoleKey.Spacebar)
                     TUI.Pickup(); // try to pick up
                 else if (x == ConsoleKey.R)
-                    TUI.Restart(); // restart game
-                else if (x == ConsoleKey.Escape)
-                    TUI.Cheat(true); // cheat the whole game
-                else if (x == ConsoleKey.N)
-                    TUI.Cheat(false); // cheat to next trash
+                    TUI.FastRestart(); // restart game
                 else if (x == ConsoleKey.NumPad0)
                     TUI.HSR(); // reset high score
                 else if (x == ConsoleKey.F)
-                    TUI.Spead(); // set up for spead run
+                    TUI.FastRestart(); // set up for spead run
             }
         }
     }
